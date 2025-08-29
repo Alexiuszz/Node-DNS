@@ -1,0 +1,29 @@
+{
+  "name": "node-dns",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev:auth": "ts-node src/authoritative.ts",
+    "dev:fwd": "ts-node src/forwarder.ts",
+    "dev:recursor": "ts-node src/recursor.ts",
+    "build": "tsc",
+    "start:auth": "node dist/authoritative.js",
+    "start:fwd": "node dist/forwarder.js",
+    "start:recursor": "node dist/recursor.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "dns2": "^2.1.0",
+    "lru-cache": "^11.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.3.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.2"
+  }
+}
