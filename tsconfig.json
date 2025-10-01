@@ -36,13 +36,15 @@
     "rootDir": "src",
     "outDir": "dist",
     "strict": true,
+    "moduleResolution": "node",
     "esModuleInterop": true,
-    "jsx": "react-jsx",
-    "verbatimModuleSyntax": true,
-    "isolatedModules": true,
-    "noUncheckedSideEffectImports": true,
-    "moduleDetection": "force",
-    "skipLibCheck": true,
+    "skipLibCheck": true
+    // "jsx": "react-jsx",
+    // "verbatimModuleSyntax": true,
+    // "isolatedModules": true,
+    // "noUncheckedSideEffectImports": true,
+    // "moduleDetection": "force",
+    // "skipLibCheck": true,
   },
   "include": ["src"]
 }
