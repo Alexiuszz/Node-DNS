@@ -47,11 +47,24 @@ const handle: DNS.DnsHandler = (request, send) => {
     rrToAnswer(rr, DEFAULT_TTL),
   );
 
-  // include the target A/AAAA if present when the name itself is a CNAME.
+  // include the target A/AAAA if present when the name itself is a CNAME.(Single-hop CNAME chase)
   const cname = ZONE_RECORDS.find(
     (rr) => rr.name.toLowerCase() === toAbsolute(q.name).toLowerCase() && rr.type === "CNAME",
   );
   if (cname) {
+    // Ensure the CNAME RR itself is present in the answer (at the front).
+    const cnameAns = rrToAnswer(cname, DEFAULT_TTL);
+    const cnamePresent = matches.some(
+      (a) =>
+        a.type === DNS.Packet.TYPE.CNAME &&
+        a.name.toLowerCase() === cname.name.toLowerCase() &&
+        (a.domain?.toLowerCase?.() ?? a.data?.toLowerCase?.()) === cname.value.toLowerCase(),
+    );
+    if (!cnamePresent) {
+      matches.unshift(cnameAns);
+    }
+
+    // Also include target A/AAAA for convenience.
     const target = toAbsolute(cname.value).toLowerCase();
     const targetAs = ZONE_RECORDS.filter(
       (rr) => rr.name.toLowerCase() === target && (rr.type === "A" || rr.type === "AAAA"),

@@ -2,7 +2,7 @@ import DNS = require("dns2");
 
 export type RRType = keyof typeof DNS.Packet.TYPE;
 
-export type RR = {
+export type RR = {// simplified record representation
   name: string; // absolute, trailing dot preferred
   type: RRType; // 'A' | 'AAAA' | 'CNAME' | 'MX' | 'NS' | 'SOA' | 'TXT' | ...
   ttl?: number;
