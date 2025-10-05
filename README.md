@@ -61,9 +61,3 @@ CNAME handling
                  +---------+
 ```
 
-Notes
-
-- Port selection: reads `DNS_PORT` or `PORT`, defaults to `5300`.
-- Zone data: served from in-memory `ZONE_RECORDS` for `example.test.`.
-- Helpers: `toAbsolute`, `findRecordsByName`, and `rrToAnswer` live in `src/utils/helpers.ts`.
-- CNAME handling: the CNAME rr is included in answers (first), and target A/AAAA are appended.
