@@ -1,37 +1,13 @@
 import DNS = require("dns2");
 import { RR, toAbsolute, findRecordsByName, rrToAnswer } from "./utils/helpers";
+import { loadZoneAsync } from "./utils/loader";
 
 // ---- In-memory zone (authoritative) ----
 const ZONE = "example.test."; // trailing dot recommended
 
 const DEFAULT_TTL = 300;
 
-const ZONE_RECORDS: RR[] = [
-  // Minimal SOA + NS + glue
-  {
-    name: ZONE,
-    type: "SOA",
-    ttl: 3600,
-    value:
-      "ns1.example.test. hostmaster.example.test. 2025082901 3600 600 604800 300",
-  },
-  { name: ZONE, type: "NS", ttl: 3600, value: "ns1.example.test." },
-  { name: "ns1.example.test.", type: "A", ttl: 3600, value: "10.0.0.53" },
-
-  // Some host records
-  { name: "www.example.test.", type: "A", ttl: 120, value: "10.0.0.10" },
-  { name: "api.example.test.", type: "AAAA", ttl: 120, value: "2001:db8::42" },
-  { name: "docs.example.test.", type: "CNAME", ttl: 120, value: "www.example.test." },
-
-  // Mail
-  { name: "mail.example.test.", type: "A", ttl: 300, value: "10.0.0.25" },
-  // MX requires preference + exchange; your DnsAnswer lacks fields for that,
-  // so we encode both as a single string "pref exchange" in `data`.
-  { name: ZONE, type: "MX", ttl: 300, value: "10 mail.example.test." },
-
-  // SPF / verification
-  { name: ZONE, type: "TXT", ttl: 300, value: "v=spf1 ip4:10.0.0.25 -all" },
-];
+let ZONE_RECORDS: RR[] = []; // loaded at startup from data/records.json
 
 
 // ---- Request handler (authoritative) ----
@@ -81,6 +57,9 @@ const handle: DNS.DnsHandler = (request, send) => {
 
 // ---- Start UDP + TCP authoritative server on port 5300 ----
 async function main() {
+  // Load zone records from JSON (async, safe)
+  ZONE_RECORDS = await loadZoneAsync();
+
   const envPortRaw = process.env.DNS_PORT ?? process.env.PORT;
   const parsed = envPortRaw ? Number(envPortRaw) : NaN;
   const PORT = Number.isFinite(parsed) && parsed > 0 ? parsed : 5300;
