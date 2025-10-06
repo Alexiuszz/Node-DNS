@@ -64,7 +64,7 @@ A minimal authoritative DNS server in Node.js using `dns2`.
 +-------------------------------+
 ```
 
-CNAME handling (detailed)
+CNAME handling
 
 ```
 +-------------------------------+
