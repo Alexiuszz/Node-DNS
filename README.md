@@ -14,7 +14,8 @@ A minimal authoritative DNS server in Node.js using `dns2`.
 - Use a custom zone file: `ZONE_FILE=./data/records.json npm run dev:auth`
 - Build JS: `npm run build`
 - Start built server: `npm run start:auth`
-Flow (high level)
+
+### Flow (high level)
 
 ```
 +-------------------------------+
